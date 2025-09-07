@@ -18,7 +18,20 @@ app.get("/", (request, response) => {
   response.status(200).send({ message: "Hello Express JS" });
 });
 
+//Query Params
 app.get("/api/users", (request, response) => {
+  const { filter, value } = request.query;
+  console.log(`filter & value = ${filter} ${value}`);
+  if (filter && value) {
+    const arr = users.filter((user) => {
+      const field = user[filter];
+      if (typeof field === "string") {
+        return field.toLowerCase().includes(value.toLowerCase());
+      }
+    });
+    console.log(arr);
+    return response.send(arr);
+  }
   response.send(users);
 });
 
