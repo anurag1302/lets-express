@@ -62,6 +62,31 @@ app.post("/api/users", (request, response) => {
   response.status(201).send(users);
 });
 
+//PUT
+app.put("/api/users/:id", (request, response) => {
+  const params = request.params;
+  const id = parseInt(params.id);
+  const body = request.body;
+
+  console.log(`type of ${id} =`, typeof id);
+
+  const user = users.find((usr) => usr.id === id);
+  if (!user) {
+    return response.status(404).send({ message: "NOT FOUND" });
+  } else {
+    const username = body.username;
+    const department = body.department;
+    if (username || department) {
+      user.username = username;
+      user.department = department;
+
+      return response.status(200).send(users);
+    }
+  }
+
+  response.status(200).send({ message: "PUT REQUEST" });
+});
+
 app.get("/api/products", (request, response) => {
   response.send([
     { id: 110, name: "CPU", price: 100 },
