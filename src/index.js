@@ -76,12 +76,9 @@ app.put("/api/users/:id", (request, response) => {
   } else {
     const username = body.username;
     const department = body.department;
-    if (username || department) {
-      user.username = username;
-      user.department = department;
-
-      return response.status(200).send(users);
-    }
+    if (username) user.username = username;
+    if (department) user.department = department;
+    return response.status(200).send(users);
   }
 
   response.status(200).send({ message: "PUT REQUEST" });
