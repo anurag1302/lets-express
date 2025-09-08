@@ -80,8 +80,6 @@ app.put("/api/users/:id", (request, response) => {
     if (department) user.department = department;
     return response.status(200).send(users);
   }
-
-  response.status(200).send({ message: "PUT REQUEST" });
 });
 
 app.get("/api/products", (request, response) => {
