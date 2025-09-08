@@ -2,6 +2,8 @@ import express from "express";
 
 const app = express();
 
+app.use(express.json());
+
 const PORT = process.env.PORT || 3000;
 
 const users = [
@@ -47,6 +49,17 @@ app.get("/api/users/:id", (request, response) => {
     return response.status(404).send({ message: "User Not Found" });
   }
   response.send(findUser);
+});
+
+//POST
+app.post("/api/users", (request, response) => {
+  const body = request.body;
+  users.push({
+    id: users.length + 1,
+    username: body.username,
+    department: body.department,
+  });
+  response.status(201).send(users);
 });
 
 app.get("/api/products", (request, response) => {
