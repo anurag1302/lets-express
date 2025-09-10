@@ -99,6 +99,21 @@ app.patch("/api/users/:id", (request, response) => {
   response.status(200).send(users);
 });
 
+//DELETE
+app.delete("/api/users/:id", (request, response) => {
+  const params = request.params;
+  const id = parseInt(params.id);
+
+  const index = users.findIndex((x) => x.id === id);
+  if (index === -1) {
+    return response.status(404).send({ message: "NOT FOUND" });
+  }
+  const deletedUser = users.splice(index, 1);
+  response
+    .status(200)
+    .send({ message: "DELETION SUCCESSFUL", user: deletedUser[0] });
+});
+
 app.get("/api/products", (request, response) => {
   response.send([
     { id: 110, name: "CPU", price: 100 },
