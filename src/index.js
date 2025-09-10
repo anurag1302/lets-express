@@ -82,6 +82,23 @@ app.put("/api/users/:id", (request, response) => {
   }
 });
 
+//PATCH
+app.patch("/api/users/:id", (request, response) => {
+  const params = request.params;
+  const id = parseInt(params.id);
+  const body = request.body;
+
+  const user = users.find((x) => x.id === id);
+  if (!user) {
+    return response.status(404).send({ message: "NOT FOUND" });
+  }
+  for (let key in body) {
+    //console.log(key, user[key], body[key]);
+    user[key] = body[key];
+  }
+  response.status(200).send(users);
+});
+
 app.get("/api/products", (request, response) => {
   response.send([
     { id: 110, name: "CPU", price: 100 },
