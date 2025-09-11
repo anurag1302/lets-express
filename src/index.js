@@ -78,22 +78,34 @@ app.post("/api/users", async (request, response) => {
 });
 
 //PUT
-app.put("/api/users/:id", (request, response) => {
+app.put("/api/users/:id", async (request, response) => {
   const params = request.params;
   const id = parseInt(params.id);
-  const body = request.body;
+  const { username, department } = request.body;
 
-  console.log(`type of ${id} =`, typeof id);
+  if (!username || !department) {
+    return response
+      .status(400)
+      .send({ message: "username & department are required" });
+  }
 
-  const user = users.find((usr) => usr.id === id);
+  const user = await prisma.users.findUnique({
+    where: { id: id },
+  });
+  console.log(`User: ${user}`);
   if (!user) {
-    return response.status(404).send({ message: "NOT FOUND" });
+    return response.status(404).send({ message: "USER NOT FOUND" });
   } else {
-    const username = body.username;
-    const department = body.department;
-    if (username) user.username = username;
-    if (department) user.department = department;
-    return response.status(200).send(users);
+    const updatedUser = await prisma.users.update({
+      where: { id: id },
+      data: {
+        username: username,
+        department: department,
+      },
+    });
+    return response
+      .status(200)
+      .send({ message: "User Updated Successfully", data: updatedUser });
   }
 });
 
