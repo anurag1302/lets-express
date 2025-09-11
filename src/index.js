@@ -62,14 +62,19 @@ app.get("/api/users/:id", (request, response) => {
 });
 
 //POST
-app.post("/api/users", (request, response) => {
+app.post("/api/users", async (request, response) => {
   const body = request.body;
-  users.push({
-    id: users.length + 1,
-    username: body.username,
-    department: body.department,
+  const dbUsers = await prisma.users.findMany();
+  const maxIndex = dbUsers.length;
+  console.log(`MaxIndex - ${maxIndex}`);
+  const newUser = await prisma.users.create({
+    data: {
+      id: maxIndex + 1,
+      username: body.username,
+      department: body.department,
+    },
   });
-  response.status(201).send(users);
+  response.status(201).send(newUser);
 });
 
 //PUT
