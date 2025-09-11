@@ -74,7 +74,9 @@ app.post("/api/users", async (request, response) => {
       department: body.department,
     },
   });
-  response.status(201).send(newUser);
+  response
+    .status(201)
+    .send({ message: "User Created Successfully", data: newUser });
 });
 
 //PUT
@@ -93,6 +95,7 @@ app.put("/api/users/:id", async (request, response) => {
     where: { id: id },
   });
   console.log(`User: ${user}`);
+
   if (!user) {
     return response.status(404).send({ message: "USER NOT FOUND" });
   } else {
