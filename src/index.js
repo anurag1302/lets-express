@@ -1,6 +1,8 @@
 import express from "express";
+import { PrismaClient } from "@prisma/client";
 
 const app = express();
+const prisma = new PrismaClient();
 
 app.use(express.json());
 
@@ -21,11 +23,19 @@ app.get("/", (request, response) => {
 });
 
 //Query Params
-app.get("/api/users", (request, response) => {
+app.get("/api/users", async (request, response) => {
   const { filter, value } = request.query;
   console.log(`filter & value = ${filter} ${value}`);
+  const dbUsers = await prisma.users.findMany({
+    orderBy: [
+      {
+        id: "asc",
+      },
+    ],
+  });
+  console.log(dbUsers);
   if (filter && value) {
-    const arr = users.filter((user) => {
+    const arr = dbUsers.filter((user) => {
       const field = user[filter];
       if (typeof field === "string") {
         return field.toLowerCase().includes(value.toLowerCase());
@@ -34,7 +44,7 @@ app.get("/api/users", (request, response) => {
     console.log(arr);
     return response.send(arr);
   }
-  response.send(users);
+  response.send(dbUsers);
 });
 
 //Request Params
