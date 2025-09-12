@@ -141,18 +141,25 @@ app.patch("/api/users/:id", async (request, response) => {
 });
 
 //DELETE
-app.delete("/api/users/:id", (request, response) => {
+app.delete("/api/users/:id", async (request, response) => {
   const params = request.params;
   const id = parseInt(params.id);
 
-  const index = users.findIndex((x) => x.id === id);
-  if (index === -1) {
-    return response.status(404).send({ message: "NOT FOUND" });
+  const user = await prisma.users.findUnique({
+    where: { id: id },
+  });
+
+  if (!user) {
+    return response.status(404).send({ message: "User Not Found" });
   }
-  const deletedUser = users.splice(index, 1);
+
+  const deletedUser = await prisma.users.delete({
+    where: { id: id },
+  });
+
   response
     .status(200)
-    .send({ message: "DELETION SUCCESSFUL", user: deletedUser[0] });
+    .send({ message: "DELETION SUCCESSFUL", user: deletedUser });
 });
 
 app.get("/api/products", (request, response) => {
