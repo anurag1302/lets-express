@@ -113,20 +113,31 @@ app.put("/api/users/:id", async (request, response) => {
 });
 
 //PATCH
-app.patch("/api/users/:id", (request, response) => {
+app.patch("/api/users/:id", async (request, response) => {
   const params = request.params;
   const id = parseInt(params.id);
-  const body = request.body;
+  const updatedBody = request.body;
 
-  const user = users.find((x) => x.id === id);
+  if (!updatedBody || Object.keys(updatedBody).length == 0) {
+    return response
+      .status(400)
+      .send({ message: "No Request Body to be updated" });
+  }
+
+  const user = await prisma.users.findUnique({
+    where: { id: id },
+  });
   if (!user) {
-    return response.status(404).send({ message: "NOT FOUND" });
+    return response.status(400).send({ message: "User Not Found" });
   }
-  for (let key in body) {
-    //console.log(key, user[key], body[key]);
-    user[key] = body[key];
-  }
-  response.status(200).send(users);
+
+  const updatedUser = await prisma.users.update({
+    where: { id: id },
+    data: updatedBody,
+  });
+  response
+    .status(200)
+    .send({ message: "Partial Updates Done", data: updatedUser });
 });
 
 //DELETE
