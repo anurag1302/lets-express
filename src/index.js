@@ -128,7 +128,7 @@ app.patch("/api/users/:id", async (request, response) => {
     where: { id: id },
   });
   if (!user) {
-    return response.status(400).send({ message: "User Not Found" });
+    return response.status(404).send({ message: "User Not Found" });
   }
 
   const updatedUser = await prisma.users.update({
