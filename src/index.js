@@ -19,7 +19,7 @@ app.listen(PORT, () => {
 });
 
 app.get("/", (request, response) => {
-  console.log("added console log to test the bare bones CI/CD, update 3");
+  console.log("added console log to test the bare bones CI/CD, update 4");
   response
     .status(200)
     .send({ message: "Hello from Express JS & Prism & Postgres" });
