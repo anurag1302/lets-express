@@ -19,7 +19,9 @@ app.listen(PORT, () => {
 });
 
 app.get("/", (request, response) => {
-  response.status(200).send({ message: "Hello from Express JS & Postgres" });
+  response
+    .status(200)
+    .send({ message: "Hello from Express JS & Prism & Postgres" });
 });
 
 //Query Params
